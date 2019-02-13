@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css"
+      integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA"
+      crossorigin="anonymous"
+    />
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"
+      integrity="sha384-7aThvCh9TypR7fIc2HV4O/nFMVCBwyIUKL8XCtKE+8xgCgl/PQGuFsvShjr74PBp"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div class="topnav">
+      <a href="/">Home</a>
+      <a href="/newPost">New post</a>
+      <a href="/posts">posts</a>
+    </div>
+
+    <div class="content"></div>
+
+    <div class="hiden yaser">
+      <header>
+        <h1>SPA<span>Router</span> JS</h1>
+        <img src="mountain-range-front.png" />
+      </header>
+      <main>
+        <p>
+          This blog is a continuation of a series of articles that I start
+          creating in order to try to explain how javascript deals, in a lower
+          level, with some of the features of some of the multiple frameworks
+          and libraries that we have out there. Before, we created a two-way
+          binding with vanilla script, now we are going to implement a SPA
+          functionality with plain javascript but of course, before going
+          through the actual implementation let´s talk a little bit about SPA…
+        </p>
+        <h2>What’s a SPA (single page application)?</h2>
+        <p>
+          The main idea behind a SPA is to dynamically load content into the
+          current page without loading an entire page from the server. You kind
+          of get a desktop application feel. All the HTML, javascript and CSS
+          may be retrieved from the server with the first load of the
+          application, instead of getting everything over an over again with
+          each load like a non SPA would do. Another important point is that the
+          main page or content never reloads, but you still have different URLs
+          and browser history through the use of location hash or HTML 5 history
+          API. In the examples, we are going to use and explain location hash
+          but both of them are quite simple to use and understand. Why SPA?
+          Let´s mentions some advantages of using SPA : Performance. SPA
+          diminish the necessity of the browser to perform requests to the
+          server which impact in the velocity of our application and the user
+          experience. Better UX. Since the velocity of the application is
+          improved the user iteration flows and feels better. Of course, there
+          are also disadvantages, let’s mention some: Heavy first load. Since
+          the first load of the app may be loading a bunch of resources it might
+          feel slow. Js must be enabled. This maybe sounds dumb because everyone
+          has javascript enabled on their browsers, but if someone turns it off
+          then a SPA is worthless. Security. SPA apps are less secure since it
+          enables hackers to perform Cross-Site Scripting. Is not necessary to
+          add, but I am going to do it anyway if you implement SPA in the wrong
+          way all the advantages are lost.- Let’s have some fun and let’s go
+          through an example…
+        </p>
+        <h2>Creating a simple SPA</h2>
+        <p>
+          The idea is to implement a simple single page application using
+          vanilla script with a location hash approach. Folder structure js.
+          This is where the javascript implementation is located. views. This is
+          where the HTML’s for the routes are. index.html. This is the main HTML
+          of our app. Is going to load the scripts and set the container to
+          render the routes HTML’s. Index HTML As we mention before this is the
+          main HTML of our app, is going to load the js we need, add the menu
+          links and also set the container element to render the routes HTML’s.
+          We are creating two menu options linked to #home and #about (the hash
+          is needed since we are going to use location hash). The div with the
+          id set to app is where we are going to render the HTML associated with
+          the active route. Finally, we load the scripts that we are going to
+          use. About and Home HTML’s We don’t really care about the content of
+          these files, so one only contains a div with a Home text and the other
+          a div with an About text. The idea is to load one by default (as a
+          default route) and the other if needed. As we mentioned before, they
+          are located in the views folder. Route Js This javascript is going to
+          provide a constructor to our Routes and also a couple of
+          functionalities. We have three params; name. Is the name of our route,
+          we are going to use it to check if the route is the active one.
+          htmlName. Is the name of the HTML to load with the route. default.
+          True if the route is the default route of our app. And it has two
+          functions; constructor. This is just a constructor function.
+          isActiveRoute. A function provided by each route to check if it’s the
+          active one. It receives the actual window location. Router Js This
+          friend is the one that contains most of the magic. Let’s take a look
+          at the code and then we are going to explain it. So let’s start
+          digging into this js… It only receives one param; routes. Is an array
+          containing the Routes of our app. It has another property; rootElem.
+          Is the root element of our application. The place where other HTML’s
+          gets rendered. Finally, it has four functions; constructor. This is
+          just a constructor function. Is executed only one-time in the creation
+          of Router. init. This function creates a listener to the hashchange
+          event of window. First is set’s a callback to that listener in order
+          to execute the function hasChanged and finally it execute it for the
+          first time (this is going to allows us to execute a default route).
+          Now every time the location hash changes the listener that we just
+          created is executed. This function is executed only one-time in the
+          creation of Router. hasChanged. This function has two main
+          responsibilities, both related to performing the correct Route load.
+          If the window location change then is going to load the correct active
+          Route and call another function to load its HTML, if the window
+          location is empty is going to load the default Route. This function
+          receives two params, one is the scope of the Router instance and the
+          other is the routes. goToRoute. This function has the responsibility
+          of getting and loading the correct HTML for the active route. It
+          receives the HTML name that it has to load and finally perform a
+          request to get it. This is all we need to have a simple SPA
+          implementation working.
+        </p>
+      </main>
+    </div>
+    <script src="new.js"></script>
+  </body>
+</html>
