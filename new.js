@@ -1,9 +1,9 @@
-(function(){
+;(function () {
   let content = document.getElementsByClassName('content')[0]
   let blog = []
   let comments = []
   allTabs = Array.from(document.getElementsByTagName('A'))
-  
+
   let contents = {
     '/home': `<h1>Home</h1>`,
     '/': `<div style="display:none;">hi</div>`,
@@ -23,33 +23,32 @@
     </div>`,
     '404': `<h1>404 ya m3lem ktoob root mtl the 5ale2  </h1>`
   }
-  
+
   // content render handler
   function render (content, contents, pathName, formHandler) {
-
     // console.log(typeof contents[pathName] !== 'undefined')
     if (pathName === '/' || pathName === '/home') {
       document.querySelector('.yaser').classList.remove('hiden')
     } else {
       document.querySelector('.yaser').classList.add('hiden')
     }
-    
+
     if (/^\/posts\/\d+$/.test(pathName)) {
       handlePost()
     } else if (contents[pathName]) {
       content.innerHTML = contents[pathName]
       if (pathName === '/posts') {
         fetch('http://localhost:3000/posts')
-        .then(function (response) {
-          return response.json()
-        })
-        .then(function (data) {
-          blog = data
-          console.log(blog)
-          let sss = ''
-          
-          data.forEach(x => {
-            let temp = `<div class="post-preview jumbotron jumbotron-fluid">
+          .then(function (response) {
+            return response.json()
+          })
+          .then(function (data) {
+            blog = data
+            console.log(blog)
+            let sss = ''
+
+            data.forEach(x => {
+              let temp = `<div class="post-preview jumbotron jumbotron-fluid">
             <div class="container">
             <a href="/posts/${x.id}">
             <h2 class="post-title display-4">
@@ -65,15 +64,15 @@
             </p>
             </div>
             </div>`
-            sss += temp
+              sss += temp
+            })
+
+            content.innerHTML = sss
+            let allPosts = Array.from(document.querySelectorAll('.content a'))
+            allPosts.forEach(post => {
+              post.addEventListener('click', handlePost)
+            })
           })
-          
-          content.innerHTML = sss
-          let allPosts = Array.from(document.querySelectorAll('.content a'))
-          allPosts.forEach(post => {
-            post.addEventListener('click', handlePost)
-          })
-        })
       } else if (pathName === '/newPost') {
         document.querySelector('#frm1').addEventListener('submit', formHandler)
       }
@@ -82,45 +81,43 @@
       content.innerHTML = contents['404']
     }
   }
-  
+
   window.onload = function () {
-    
     render(content, contents, window.location.pathname, formHandler)
     // handle the history state and render the previous page or the next depens the actions
     window.onpopstate = function (e) {
       e.preventDefault()
       render(content, contents, window.location.pathname, formHandler)
     }
-    
+
     // add eventlistner to the tabs
     allTabs.forEach(function (tab) {
       tab.addEventListener('click', function (e) {
         e.preventDefault()
         window.history.pushState(null, null, e.target.pathname)
-        
+
         let pathName = e.target.pathname
         render(content, contents, pathName, formHandler)
       })
     })
   }
 
-  
   //  handle rendrening the single post with form for comment
   function handlePost (e) {
     e.preventDefault()
     let pathName = e.path[1].pathname
-    
+
     window.history.pushState(null, null, pathName)
 
     // retrieve the post id using regex
     let post_id = /\/posts\/(\d+)/g.exec(pathName)
-    
+
     fetch(`http://localhost:3000/posts/${post_id[1]}`)
-    .then(function (response) {
-      return response.json()
-    })
-    .then(function (data) {
-      let postTemp = `<div class="post-preview" id= "${data.id}">
+      .then(function (response) {
+        return response.json()
+      })
+      .then(function (data) {
+        let postTemp = `<div class="post-preview" id= "${data.id}">
       
       <h2 class="post-title" style="margin: 20px 20px 20px 20px;">
       ${data.title}
@@ -142,37 +139,37 @@
       
       </form></div>
       `
-      var filterdCom = []
-      fetch(`http://localhost:3000/comments`)
-      .then(function (response) {
-        return response.json()
-      })
-      .then(function (allCom) {
-        comments = allCom
-        // console.log(comments, 'this is all comments ')
-        filterdCom = comments.filter(comment => {
-          //   console.log(comment.id, 'comments id')
-          //   console.log(groups[1], 'post id')
-          if (comment.postId + '' === groups[1]) {
-            return true
-          }
-        })
-        
-        content.innerHTML = postTemp
-        innerCom = document.querySelector('.comment-list')
-        console.log(innerCom)
-        filterdCom.forEach(singleFCom => {
-          innerCom.innerHTML += `<div
+        var filterdCom = []
+        fetch(`http://localhost:3000/comments`)
+          .then(function (response) {
+            return response.json()
+          })
+          .then(function (allCom) {
+            comments = allCom
+            // console.log(comments, 'this is all comments ')
+            filterdCom = comments.filter(comment => {
+              //   console.log(comment.id, 'comments id')
+              //   console.log(groups[1], 'post id')
+              if (comment.postId + '' === post_id[1]) {
+                return true
+              }
+            })
+
+            content.innerHTML = postTemp
+            innerCom = document.querySelector('.comment-list')
+            console.log(innerCom)
+            filterdCom.forEach(singleFCom => {
+              innerCom.innerHTML += `<div
                 class="comment-item"
                 style="transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                ${ singleFCom.body }
+                ${singleFCom.body}
               </div>`
-        })
-        document
-        .querySelector('#frm2')
-        .addEventListener('submit', commentsHandler)
+            })
+            document
+              .querySelector('#frm2')
+              .addEventListener('submit', commentsHandler)
+          })
       })
-    })
   }
   // handle posting comments to the db
   function commentsHandler (e) {
@@ -180,7 +177,9 @@
     let commentPath = window.location.pathname
     let groups = /\/posts\/(\d+)/g.exec(commentPath)
     let comment = document.querySelector('#com').value
-    document.querySelector('.comment-list').innerHTML += `<div style="display: block;
+    document.querySelector(
+      '.comment-list'
+    ).innerHTML += `<div style="display: block;
     width: 100%;
     height: calc(1.5em + .75rem + 2px);
     padding: .375rem .75rem;
@@ -199,41 +198,41 @@
       postId: groups[1]
     }
     fetch('http://localhost:3000/comments', {
-    method: 'POST', // or 'PUT'
-    body: JSON.stringify(dataBlog), // data can be `string` or {object}!
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(res => res.json())
-  .then(response => console.log('Success:', JSON.stringify(response)))
-  .catch(error => console.error('Error:', error))
-  document.querySelector('#com').value = ''
-}
+      method: 'POST', // or 'PUT'
+      body: JSON.stringify(dataBlog), // data can be `string` or {object}!
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(response => console.log('Success:', JSON.stringify(response)))
+      .catch(error => console.error('Error:', error))
+    document.querySelector('#com').value = ''
+  }
 
-// form handler & post the input to the json file
-function formHandler (e) {
-  e.preventDefault()
-  let title = document.querySelector('#tit').value
-  let author = document.querySelector('#auth').value
-  let image = document.querySelector('#img').value
-  let dataBlog = {
-    title: title,
-    author: author,
-    image: image
+  // form handler & post the input to the json file
+  function formHandler (e) {
+    e.preventDefault()
+    let title = document.querySelector('#tit').value
+    let author = document.querySelector('#auth').value
+    let image = document.querySelector('#img').value
+    let dataBlog = {
+      title: title,
+      author: author,
+      image: image
+    }
+    fetch('http://localhost:3000/posts', {
+      method: 'POST', // or 'PUT'
+      body: JSON.stringify(dataBlog), // data can be `string` or {object}!
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(response => console.log('Success:', JSON.stringify(response)))
+      .catch(error => console.error('Error:', error))
+    document.querySelector('#tit').value = ''
+    document.querySelector('#auth').value = ''
+    document.querySelector('#img').value = ''
   }
-  fetch('http://localhost:3000/posts', {
-  method: 'POST', // or 'PUT'
-  body: JSON.stringify(dataBlog), // data can be `string` or {object}!
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-.then(res => res.json())
-.then(response => console.log('Success:', JSON.stringify(response)))
-.catch(error => console.error('Error:', error))
-document.querySelector('#tit').value = ''
-document.querySelector('#auth').value = ''
-document.querySelector('#img').value = ''
-}
-}())
+})()
