@@ -1,0 +1,27 @@
+{
+  "name": "SPA-JS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "new.js",
+  "dependencies": {
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "concurrently --kill-others \"node server.js\" \"json-server --watch db.json\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moesi88/SPA-JS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moesi88/SPA-JS/issues"
+  },
+  "homepage": "https://github.com/moesi88/SPA-JS#readme"
+}
